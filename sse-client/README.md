@@ -9,7 +9,7 @@ This code is really simple:
 Just get a new `EventSource` instnace using the server URL as param (you can set some params about credentials, but we're not using those here):
 
 ```javascript
-const eventSource = new EventSource('http://192.168.0.17:5001/events');
+const eventSource = new EventSource('http://localhost:5001/events');
 ```
 
 Populate `eventSource` instance with our functions. That's important, we are not setting listeners nor callbacks, we are setting plain functions inside our instance. It's not mandatory to set any of the functions but you need to set, at least, `onmessage`so you can do something with the info received from the server. As it sound, `onopen` is run when the `event: open` is received (check the [server](../sse-server/README.md) doc where we sent that event upon client connection) and `onerror` is run when connection gets lost:
@@ -44,6 +44,11 @@ eventSource.onerror = function(error) {
   heroElement.addClass('is-warning');
 }
 ```
+
+## Node.js Client
+One problem when coding a client running on Node.js is that `EventSource` is only included in browsers. In Node.js you need to install a dep with an implementation of `EventSource`. In this exampla we have used an npm package called simple [eventsource](https://www.npmjs.com/package/eventsource) that does simply that and also includes a polyfill for broswers lacking `EventSource` too.
+
+The [code](./node) stays the same as before, no big changes anywhere.
 
 ## Screenshots
 Here is the [Vue.js](https://vuejs.org) client:

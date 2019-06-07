@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 const HEARTBEAT_TIME = 15000;
 
 function subscribe(req, res) {
-  console.log(`[${new Date()}] New client connected from ${req.ip}`);
+  console.log(`[${new Date().toLocaleString()}] New client connected from ${req.ip}`);
 
   res.writeHead(
     200,

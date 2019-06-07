@@ -1,0 +1,16 @@
+{
+  "name": "sse-node-client",
+  "version": "1.0.0",
+  "description": "Server-Sent Events client in Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eventsource": "^1.0.7"
+  }
+}
