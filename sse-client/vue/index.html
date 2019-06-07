@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SSE Messages</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/luxon"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+
+    <style type="text/css">
+      html {
+        overflow-y: hidden;
+      }
+      body {
+        background-color: #DDEBE9;
+      }
+      .navbar {
+        background-color: transparent;
+      }
+      .columns {
+        height: 100vh;
+      }
+      .messages-column {
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      ::-webkit-scrollbar {
+          width: 0px;
+      }
+      .title {
+        font-size: 4rem; !important
+      }
+      ul {
+        padding: 0rem 1rem 0rem 1rem;
+      }
+      li {
+        margin-top: 0.3rem;
+      }
+
+      li:first-child {
+        margin-top:0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+      <!-- simple navbar instead of title -->
+      <nav class="navbar is-hidden-mobile" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <div class="navbar-item">
+            SSE Messages
+          </div>
+        </div>
+
+        <div id="appNavBar" class="navbar-menu">
+          <div class="navbar-start">
+          </div>
+
+          <div class="navbar-end">
+            <div class="navbar-item">
+              {{ status }}
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="columns is-vcentered">
+          <div class="column is-5 has-text-centered">
+            <h1 class="title">
+              Messages Received
+            </h1>
+            <h2 class="subtitle">
+              using ServerSentEvents
+            </h2>
+          </div>
+
+          <div class="column messages-column" ref="messages-column">
+            <ul>
+              <li v-for="message in messages">
+
+                <article class="message is-info is-small">
+                  <div class="message-body">
+
+                    <div class="field is-grouped is-grouped-multiline is-pulled-right">
+                      <div class="control">
+                        <div class="tags has-addons">
+                          <span class="tag is-light">{{ formatDate(message.when) }}</span>
+                          <span class="tag is-info">{{ formatTime(message.when) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {{message.message}}
+
+                  </div>
+                </article>
+
+              </li>
+            </ul>
+          </div>
+      </div>
+    </div>
+
+    <script>
+      var app = new Vue({
+        el: '#app',
+
+        data: {
+          status: 'Offline',
+          messages: []
+        },
+
+        methods: {
+          formatDate: function(date) {
+            return luxon.DateTime.fromISO(date).toLocaleString(luxon.DateTime.DATE_SHORT);
+          },
+          formatTime: function(date) {
+            return luxon.DateTime.fromISO(date).toLocaleString(luxon.DateTime.TIME_SIMPLE);
+          },
+          addMessage: function(message) {
+            app.messages.push(JSON.parse(message.data));
+            // waiting for DOM update before scrolling down:
+            setTimeout(
+              () => {
+                this.$refs['messages-column'].scroll(
+                  {
+                    top: this.$refs['messages-column'].scrollHeight,
+                    left: 0,
+                    behavior: 'smooth'
+                  }
+                )
+              },
+              100
+            );
+          }
+        },
+
+        created: function() {
+          const eventSource = new EventSource('http://192.168.0.17:5001/events');
+          this.status = 'Connecting...';
+
+          eventSource.onopen = function() {
+            app.status = 'Connected'
+          }
+
+          eventSource.onmessage = function(message) {
+            console.log(message);
+            app.addMessage(message);
+          }
+
+          eventSource.onerror = function(error) {
+            app.status = 'Connecting...'
+          }
+        }
+      })
+    </script>
+  </body>
+
+</html>

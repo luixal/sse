@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SSE Messages</title>
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/luxon"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+
+    <style type="text/css">
+      html {
+        overflow-y: hidden;
+      }
+      body {
+        background-color: #DDEBE9;
+      }
+      .title {
+        font-size: 3rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <section class="hero is-success is-bold is-fullheight">
+      <div class="hero-body">
+        <div class="container">
+          <h1 id="title" class="title">
+            Connecting...
+          </h1>
+          <h2 id="subtitle" class="subtitle"></h2>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const formatDate = function(date) {
+        let luxonDate = date ? luxon.DateTime.fromISO(date) : luxon.DateTime.local();
+        return luxonDate.toLocaleString(luxon.DateTime.DATETIME_MED);
+      };
+      // get and instance of EventSource connected to our SSE server:
+      const eventSource = new EventSource('http://192.168.0.17:5001/events');
+
+      eventSource.onopen = function() {
+        // we just set some text in title and subtitle:
+        $('#title').text('Connected!');
+        $('#subtitle').text(formatDate());
+        // and change classes for changing background color:
+        let heroElement = $('.hero');
+        heroElement.removeClass('is-warning');
+        heroElement.addClass('is-success');
+      }
+
+      eventSource.onmessage = function(message) {
+        console.log(message);
+        // we parse the message to json:
+        let json = JSON.parse(message.data);
+        // and set title and subtitle with text and date received:
+        $('#title').text(json.message);
+        $('#subtitle').text(formatDate(json.when));
+      }
+
+      eventSource.onerror = function(error) {
+        // we just set some text in title and subtitle:
+        $('#title').text('Connecting...');
+        $('#subtitle').text(formatDate());
+        // and change classes for changing background color:
+        let heroElement = $('.hero');
+        heroElement.removeClass('is-success');
+        heroElement.addClass('is-warning');
+      }
+    </script>
+  </body>
+
+</html>
