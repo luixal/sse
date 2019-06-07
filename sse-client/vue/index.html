@@ -137,7 +137,7 @@
         },
 
         created: function() {
-          const eventSource = new EventSource('http://192.168.0.17:5001/events');
+          const eventSource = new EventSource('http://localhost:5001/events');
           this.status = 'Connecting...';
 
           eventSource.onopen = function() {

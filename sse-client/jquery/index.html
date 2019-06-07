@@ -39,7 +39,7 @@
         return luxonDate.toLocaleString(luxon.DateTime.DATETIME_MED);
       };
       // get and instance of EventSource connected to our SSE server:
-      const eventSource = new EventSource('http://192.168.0.17:5001/events');
+      const eventSource = new EventSource('http://localhost:5001/events');
 
       eventSource.onopen = function() {
         // we just set some text in title and subtitle:
