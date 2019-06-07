@@ -5,8 +5,8 @@ Server-Sent Events are a way of sending information from a server to its clients
 This repo contains some code projects showing example of how to work with it:
 
 * [Node.js + Express Server](./sse-server)
-* [jQuery Client](./sse-client/jquery)
-* [Vue.js Client](./sse-client/vue)
+* [jQuery Client](./sse-client/jquery) - [More Info](./sse-client)
+* [Vue.js Client](./sse-client/vue) - [More Info](./sse-client)
 
 ## How do I run this?
 You need to use at least two pieces for the example to work: a server and a client.
@@ -38,4 +38,4 @@ There are two similar clients that only differ in the front tooling used in each
 ## Where do this messages come from?
 Every 5 seconds, the server fetches a joke from [ChuckNorris API](https://api.chucknorris.io/) and sends that joke as an SSE message to the clients.
 
-Also, in the terminal you have opened your server, you can type some text and, when hitting `enter`, that text will be sent as a message to the clients.
+Also, in the terminal you have opened your server, you can type some text and, when hitting `enter`, that text will be sent
