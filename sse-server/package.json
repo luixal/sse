@@ -8,8 +8,8 @@
     "start": "node ./src/server.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Luis Alberto Pérez García <luixal@gmail.com>",
+  "license": "GPL-3.0-only",
   "dependencies": {
     "cors": "^2.8.5",
     "eventemitter3": "^3.1.2",
